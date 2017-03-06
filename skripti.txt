@@ -1,0 +1,15 @@
+frame remove 0 99
+open poscar poscar1
+copy cell
+frame new
+paste cell
+define a 2.845
+shift a a 0
+pick element 120 121
+reindex 1
+pick all
+frame previous
+interpolate 15
+recolor element 2 150 150 100 100
+show frame
+view reset

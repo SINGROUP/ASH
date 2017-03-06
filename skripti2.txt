@@ -1,0 +1,12 @@
+frame new
+define a 4.0
+cell x a a 0 pbc
+cell y a 0 a pbc
+cell z 0 a a pbc
+create 1.0 1.0 1.0
+recolor element 0 0 40 200 100
+expand x 4
+expand y 3
+expand z 5
+view angle -pi/2 0 120
+show cell

@@ -1,0 +1,39 @@
+print " "
+print "This script just shows how numeric and string variables work"
+print "and how one should be careful when overriding variable names."
+print "Especially note how the dollar sign evaluation happens before"
+print "the command 'value' is executed, allowing switching from strings"
+print "to numeric expressions."
+print " "
+define echo string str 1+num
+define echo num 0.5
+define echo func 2*#1
+value str
+value num
+value func:str
+value func:num
+value $str$
+value $num$
+value func:$str$
+value func:{$str$}
+value func:($str$)
+value func:[$str$]
+value func:num
+value func:$num$
+value 10+str
+value 10+$str$
+define echo string s2 str
+value s2
+value $s2$
+value func:{$s2$}
+define echo string s3 $str$
+value s3
+value $s3$
+define echo n2 1+num
+value n2
+define echo num 1
+value n2
+value $str$
+define echo n3 $str$
+define echo n4 str
+

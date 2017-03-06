@@ -1,0 +1,15 @@
+frame new
+alias add create
+alias set define
+set nn 100
+while nparts < nn+1
+ set dist 50*(1.5-exp:-(nparts/nn))
+ set angle 4*pi*nparts/nn
+ if nparts%10 = 0
+  value nparts
+  value angle/pi/2
+ endif
+ add dist*sin:angle dist*cos:angle nparts/nn*100
+endwhile
+view angle 0 0 350
+list alias

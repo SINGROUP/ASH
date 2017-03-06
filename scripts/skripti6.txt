@@ -1,0 +1,18 @@
+frame remove 0 99
+open poscar /Users/teemu/Documents/Projects/nanoparticles/vasp_files/au_nacl/au20_nacl/relax_dblvac_2/CONTCAR
+pick element 2
+cluster
+pick all
+copy cell
+frame new
+paste cell
+cluster
+define a 2.845
+rotate z pi/2
+uncluster
+shift 0 a 0
+reindex 1
+frame switch 1
+interpolate 3
+recolor element 2 150 150 100 100
+show frame

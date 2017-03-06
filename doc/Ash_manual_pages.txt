@@ -1,0 +1,495 @@
+
+Manual for 'alias'
+
+Usage: > alias  (name)  (command)
+
+Creates an alias for a command. Once an alias is defined, entering it will lead to the original command being executed. If further arguments follow the alias, they are appended to the command. If one wishes to insert arguments inside the aliased command, this can be done by including the strings '#1', '#2' etc. (up to #9) in the alias definition. Upon calling the alias, this will lead to each '#1' being replaced by the first following argument etc. To include a series of commands in a single alias, wrap the full command series in quotes (" or ', if you need nested quotes, alter between the two). Using a semicolon (;) without quotes will cut the evaluation of the command 'alias' and start immediately executing whatever follows. 
+Example: > alias cd "directory switch #1; print ' *  changed the directory to   *'; directory" (alias definition) 
+         > cd ..  (alias call)
+
+
+
+Manual for 'bend'
+
+Usage: > bend  x / y / z / axis  (4-9 parameters)
+
+Bends the geometry around an axis. This is done by defining an axis vector, a reference point through which the axis is set, and a 'radius' vector defining the bending radius. (Only the component of the radius vector perpendicular to the bending axis is meningful. If the vector is not perpendicular to the axis, the perpendicular component is automatically extracted. It must not be a zero vector.) If you move by the radius vector from the reference point and take the line parallel to the bending axis, you get a line in space which is not affected by the bending operation. Let us call this the 'contact' line. Now consider the plane passing through the contact line, perpendicular to the plane defined the bending axis and the contact line (perpendicular to the radius vector). Let this be called the 'wrapping' plane. This plane is bent as if wrapping a cylinder defined by the axis and radius, so that the original in-plane distances are the same as the final distances measured along the cylinder surface. Naturally the operation also bends other planes. This is done so that straight lines in the direction of the radius vector are conserved. That is, planes parallel to the wrapping plane but closer to the axis are squeezed (distances in the bend direction are shrunk) and the planes farther from the axis are stretched. The operation only affetcs the currently active particles. Positions and orientations of clusters are affected, but their internal structure is not.
+Options:
+    x (py) (pz) (ry) (rz) - Bends the system around an axis set in the x direction, [1, 0, 0]. The axis is fixed at [0, py, pz] and the radius vector is defined as [0, ry, rz].
+    y (px) (pz) (rx) (rz) - Bends the system around an axis set in the y direction, [0, 1, 0]. The axis is fixed at [px, 0, pz] and the radius vector is defined as [rx, 0, rz].
+    z (px) (py) (rx) (ry) - Bends the system around an axis set in the z direction, [0, 0, 1]. The axis is fixed at [px, py, 0] and the radius vector is defined as [rx, ry, 0].
+    axis (ax) (ay) (az) (px) (py) (pz) (rx) (ry) (rz) - Bends the system around an arbitrary axis [ax, ay, az] at [px, py, pz]. The radius vector is defined as [rx, ry, rz]. Only the component perpendicular to the axis is meaningful, and it must not be zero, i.e., the radius vector must not be parallel to the axis.
+
+
+
+Manual for 'calcman'
+
+Usage: > calcman  + / - / * / / / % / = / < / > / & / | / ^ / not / sin / cos / tan / asin / acos / atan / ln / exp / sqrt / abs / rnd / floor / free / coord / col / row / elem / tp / unit / zero / insert / as / gs
+
+Displays a brief explanation on the usage of the given function or operator.
+
+
+
+Manual for 'cell'
+
+Usage: > cell  [ x / y / z ]  (1-4 parameters)
+
+Sets supercell axis vectors. Note that the supercell vectors cannot be linearly dependent. If you try to define a vector such that the supercell becomes degenerate, the program will ignore the command.
+Options:
+    (cell matrix) - By default, the command expects the full supercell in matrix format where the row vectors define the supercell vectors.
+    x (cx) [(cy) (cz)] [(pbc)] - Reset the first cell vector. If only one scalar argument, (cx), is given, the vector is set to [cx, 0, 0]. Otherwise all three components of the vector are expected as arguments. In addition, one can specify if this direction is periodic. (For periodic bounds, give 't', 'true', 'pbc', or '1'; for free bounds, give 'f', 'false', 'free', or '0'.)
+    y [(cx)] (cy) [(cz)] [(pbc)] - Reset the second cell vector. If only one scalar argument, (cy), is given, the vector is set to [0, cy, 0]. Otherwise all three components of the vector are expected as arguments. In addition, one can specify if this direction is periodic. (For periodic bounds, give 't', 'true', 'pbc', or '1'; for free bounds, give 'f', 'false', 'free', or '0'.)
+    z [(cx) (cy)] (cz) [(pbc)] - Reset the first cell vector. If only one scalar argument, (cz), is given, the vector is set to [0, 0, cz]. Otherwise all three components of the vector are expected as arguments. In addition, one can specify if this direction is periodic. (For periodic bounds, give 't', 'true', 'pbc', or '1'; for free bounds, give 'f', 'false', 'free', or '0'.)
+
+
+
+
+Manual for 'cluster'
+
+Usage: > cluster
+
+Joins selected particles to a cluster, which is then treated as a single particle with structure. The structure of smaller clusters are retained when joint to bigger clusters.
+
+
+
+Manual for 'constrain'
+
+Usage: > constrain  [ (fx) (fy) (fz) ]
+
+Manipulates atomic constraints. Often, one may wish to freeze certain atoms in a simulation. This command allows you to handle the flags for atomic constraints in three directions. These flags are meant to be printed and used by an external simulation software - they have no effect on how the atoms are handled in ASH.
+    - By default, the command sets the constraint flags of all selected particles to false.
+     (fx) (fy) (fz) - Sets the constraint flags of all selected particles to the given values. The values may be given using keywords 'f', 't', 'false', or 'true', or as variables for which the values 1 and 0 are interpreted as true and false, respectively. Other values are interpreted to mean that the corresponding flag should not be touched.
+
+
+
+Manual for 'copy'
+
+Usage: > copy  [ union / replace ]  [ cell ]   [ (slot) ]
+
+Copies structures on the clipboard. Only currently selected particles are copied. By default, supercell information is not copied.
+Options:
+    union - The structure already on the clipboard is appended.
+    replace - The structure already on the clipboard is discarded and replaced. (default)
+        cell - The supercell is also copied on the clipboard.
+             [(slot)] - There are 10 slots for copies. By default, slot 0 is used, but this can be specified by giving an index.
+
+
+
+Manual for 'create'
+
+Usage: > create  (x)  (y)  (z)  [ (element) ]
+
+Creates an atom in the system at the given position. Also the element of the atom can be specified by an index or a chemical symbol (but not an arbitrary string). By default, the atom will be of element 'Atom0'.
+
+
+
+Manual for 'cut'
+
+Usage: > cut  [ union / replace ]  [ cell ]   [ (slot) ]
+
+Copies structures on the clipboard and then deletes them. Only currently selected particles are copied. By default, supercell information is not copied.
+Options:
+    union - The structure already on the clipboard is appended.
+    replace - The structure already on the clipboard is discarded and replaced. (default)
+        cell - The supercell is also copied on the clipboard.
+             [(slot)] - There are 10 slots for copies. By default, slot 0 is used, but this can be specified by giving an index.
+
+
+
+Manual for 'define'
+
+Usage: > define  [ echo / remove ]  [ string ]  (variable)  [ (value) ]
+
+Defines a variable or a function. For a variable, the definition can be a real number or an expression that can be evaluated immediately, or a string, in which case the option string is needed. In the case of an expression, the result of the evaluation is stored in the variable. When defining a string, evaluation of expressions can be included using dollar signs ($), as explained in the manual of value. A function on the other hand is an expression that is not evaluated immediately, but which can take arguments that affect its value. To define a function, include strings '#1', #2, ..., #9 in the definition to specify the arguments of the function. (The number of arguments is limited to 9, but a single argument can be a vector or a matrix of arbitrary size.) The syntax for calling the variables and functions are explained in the manual of 'value'.
+Example: > define var 1+2 (Stores 3.0 in the variable 'var'.)
+         > define f (var+#1)/#2 (If 'var' had the value 3.0, this defines the function f(x,y) = (3.0+x)/y; the definition is invalid if 'var' has not been defined.)
+Options:
+    (variable) (value) - The first argument is the name of the variable or function, the second the number or expression which is stored.
+    echo (variable) (value) - Same as the default command, but the value stored is shown.
+    remove (variable) - Removes the variable associated to the given name.
+        string (variable) (value) - Stores a string in the variable.
+
+
+
+Manual for 'delete'
+
+Usage: > delete  [ duplicates ]  [ (0-2 parameters) ]
+
+Deletes particles.
+Options:
+     [(i1) [(i2)]] - By default, the selected particles are annihilated. If one integer argument is given, the particle with corresponding index is deleted. If two arguments are given, (i1) (i2), the particles within the range i1, i1+1, ..., i2 are deleted.
+    duplicates [(range)] - Duplicate particles are deleted. That is, if there are two similar particles at a distance of less than a certain range, the latter (one with greater index) is destroyed. By default the range is 0.1, but the user can specify any range.
+
+
+
+Manual for 'directory'
+
+Usage: > directory  [ switch / list ]  [ (0-1 parameters) ]
+
+Access to directory operations. By default, the command prints the current working directory. To emulate shell commands, one may define aliases such as 'alias cd directory switch', 'alias ls directory list' and 'alias pwd directory'.
+Options:
+    switch (directory) - Switches to the given directory.
+    list - Lists the contents of the current directory.
+
+
+
+Manual for 'element'
+
+Usage: > element  rename / switch  (1-2 parameters)
+
+Manipulates element data.
+Options:
+    rename (element) (name) - Sets a name for the given element. Note, that you cannot rename indices 1-119, since those are fixed to represent the real elements. Indices 0 and 120 and up can be named freely.
+    switch [(old element)] (new element) - If only one argument is given, all the currently active atoms will be changed to the given element. If two arguments are given, the atoms of the specified element (in all frames) will be turned to atoms of the new element.
+
+
+
+Manual for 'exit'
+
+Usage: > exit
+
+Terminates the program.
+
+
+
+Manual for 'expand'
+
+Usage: > expand  [ x / y / z ]  (multiplier)
+
+Multiplies the structure in the given direction by the given number of times. This means that the particles are duplicated and shifted as defined by the supercell vectors. Finally, the supercell vectors are also stretched. Boundary conditions remain as they were; they can be changed using the command 'cell'.
+Options:
+    (multiplier) - Expands the structure in all directions according to the multiplier. If the multiplier is a vector, the integer parts of the components are used as expansion factors for the corresponding directions.
+    x (multiplier) - Expands the structure in the direction of the first supercell vector.
+    y (multiplier) - Expands the structure in the direction of the second supercell vector.
+    z (multiplier) - Expands the structure in the direction of the third supercell vector.
+
+
+
+Manual for 'frame'
+
+Usage: > frame  previous / next / first / last / switch / new / remove / move / rename  [ (0-2 parameters) ]
+
+Manipulates frames. Note that you can also browse frames using the 'n' (next) and 'p' (previous) keys when the visualization window is active.
+Options:
+    previous - Switch to the previous frame.
+    next - Switch to the next frame.
+    first - Switch to the first frame.
+    last - Switch to the last frame.
+    switch (index) - Switch to the specified frame.
+    new - Create a new frame after the current one.
+    remove [(i1) [(i2)]] - For no arguments, deletes the current frame. For one argument, deletes the specified frame. For two arguments, deletes all frames in the range i1, i1+1, ... , i2.
+    move (index) - Moves the current frame to the given index position.
+    rename (name) - Renames the frame. By default, the frames are named according to filenames.
+
+
+
+Manual for 'hide'
+
+Usage: > hide  [ axis / cell / frame / directory ]
+
+Hides excess information. By default, the currently active particles will be hidden.
+Options:
+    axis - The basis vectors of the Cartesian coordinate system are not drawn in the visualization window.
+    cell - The basis vectors of the supercell are not drawn in the visualization window.
+    frame - The number of current frame and total number of frames is not displayed in the visualization window.
+    directory - The current working directory is not displayed in the prompt.
+
+
+
+Manual for 'interpolate'
+
+Usage: > interpolate   [ [ (initial) ]  (final) ]  (frames)
+
+Interpolates between two structures by linearly shifting atoms and rotating clusters. The command can only be used between two similar structures, that is, for structures that have the same number of particles of each type with the same indices.
+Options:
+    [[(initial)] (final)] (frames) - If only one argument is given, it specifies the number of interpolated frames to be created. The interpolation is done by uniform steps. For example, a command of '3' frames will generate frames where the coordinates are shifted by 0.25, 0.5 and 0.75 from the initial to the final configuration. ( v = v_0 + a*(v_1-v_0) ) By default, the frames used for interpolation are the current (initial) and the next frame (final). These can be specified by additional arguments, however.
+
+
+
+Manual for 'list'
+
+Usage: > list  [ particles / element / cell / value / alias / command / function / neighbors ]  [ (0-1 parameters) ]
+
+Prints data on screen.
+Options:
+    - By default, the indices and coordinates of the currently selected particles are listed.
+    particles - The indices and coordinates of all particles of the current frame are listed.
+    element - The names and indices as well as the number of such particles in the current frame are listed.
+    cell - The components of the supercell vectors are listed (in Cartesian coordinates).
+    value - The names and stored values of the currently defined variables are listed.
+    function - The names and syntax of the currently defined functions are listed.
+    alias - The names and stored commands of the currently defined aliases are listed.
+    command - The available commands are listed.
+    neighbors [n] - Lists the n closest neighbors of all currently selected particles. By default, n = 8. Note that the lists are made for particles, not atoms, and they include all particles in the system, even unselected ones.
+
+
+
+Manual for 'man'
+
+Usage: > man  alias / bend / calcman / cell / cluster / constrain / copy / create / cut / define / delete / directory / element / exit / expand / frame / hide / interpolate / list / man / mirror / mouse / open / paste / pick / print / recolor / reindex / resize / rotate / scale / shift / show / uncluster / undo / unpick / value / view / wait / write
+
+Displays a brief explanation on the usage of the given command.
+
+
+
+Manual for 'mirror'
+
+Usage: > mirror  x / y / z / plane  (1-6 parameters)
+
+Mirrors structures with respect to a given plane. Possible periodic boundaries are applied automatically. The internal structures of clusters are also mirrored. Note that the arguments are given in Cartesian coordinates, not with respect to the supercell vectors.
+Options:
+    x (x) - Mirrors the x-coordinates of all particles with respect to the plane passing through the point [x, 0, 0].
+    y (y) - Mirrors the y-coordinates of all particles with respect to the plane passing through the point [0, y, 0].
+    z (z) - Mirrors the z-coordinates of all particles with respect to the plane passing through the point [0, 0, z].
+    plane (vx) (vy) (vz) (px) (py) (pz) - Mirrors the coordinates of all particles with respect to the plane normal to the vector [vx, vy, vz] passing through the point [px, py, pz].
+
+
+
+Manual for 'mouse'
+
+Usage: > mouse  info / pick
+
+Toggles response to mouse clicks in the visualization window.
+Options:
+    info - Toggles mouse query mode. When the query mode is on, one can view the coordinates of atoms by clicking on them in the visualization window. If several atoms are on the 'line of sight', all their coordinates will be displayed in order of depth, starting from the one farthest away.
+    pick - Toggles mouse selection mode. When the selection mode is on, one can select and unselect atoms by clicking on them. A sinlge click either selects or unselects the atom that was clicked on, depending on whether it was previously selected or not. A double click does the same for all the particles on the 'line of sight'. A triple click selects all the particles on the line of sight. (It will not unselect any previously selected atoms, like a double click does.
+
+
+
+Manual for 'open'
+
+Usage: > open  xyz / poscar / script / data  (filename) [ (width) (variable) ]
+
+Reads data from a file.
+Options:
+    xyz (filename) - Reads geometry data from an XYZ format file.
+    poscar (filename) - Reads geometry data from a POSCAR format file.
+    script (filename) - Reads a command script file.
+    data(filename) (width) (variable) - Reads a data matrix and stores it in a matrix variable of the given width. The values should be separated by spaces and newlines. If non numerical values are met, NaN values are stored in the corresponding cells of the matrix.
+
+
+
+Manual for 'paste'
+
+Usage: > paste  [ union / replace ]  [ cell ]   [ (slot) ]
+
+Pastes structures from the clipboard. By default, supercell information is not pasted.
+Options:
+    union - The current structure is appended with the data on the clipboard. (default)
+    replace - The current structure is discarded and replaced by the data on the clipboard.
+        cell - The current supercell data is replaced by the data on the clipboard.
+             [(slot)] - There are 10 slots for copies. By default, slot 0 is used, but this can be specified by giving an index.
+
+
+
+Manual for 'pick'
+
+Usage: > pick  [ union / replace / intersect ]  all / xmore / xless / ymore / yless / zmore / zless / range / sphere / element / particle / particles / default  [ (0-6 parameters) ]
+
+Selects a group of particles for further operations.
+Options:
+    union - A union of the currently selected particles and those specified by the command will become active.
+    replace - The currently selected particles will become inactive, then the particles specified by the command will become active. (default)
+    intersect - An intersection of the currently selected particles and those specified by the command will become active.
+    default - Turns the default pick mode on. That is, new particles are by default selected when introduced.
+        all - Select all particles.
+        xmore (x) - The particles whose x coordinate is greater than the given real are selected.
+        xless (x) - The particles whose x coordinate is less than the given real are selected.
+        ymore (y) - The particles whose y coordinate is greater than the given real are selected.
+        yless (y) - The particles whose y coordinate is less than the given real are selected.
+        zmore (z) - The particles whose z coordinate is greater than the given real are selected.
+        zless (z) - The particles whose z coordinate is less than the given real are selected.
+        range (vx) (vy) (vz) (ux) (uy) (uz) - The vector u defines a point in space and the vector v a normal vector for a plane. Placing this plane at the given point, the particles located on that side of the plane to where the vector points are selected.
+        sphere (ux) (uy) (uz) (r) - The vector u defines a point in space and r a radius so that the particles within this radius are selected. If r is a vector, the norm of the vector is used as the radius.
+        element (e1) [(e2)] - If only one integer argument is given, all atomic particles of that element type are selected. If two integers are given, all elements in the range e1, e1+1, ..., e2 are selected.
+        particle (p1) [(p2) [(p3) ... ]] - The particles whose indices are given are selected.
+        particles (p1) (p2) - The particles in the index range p1, p1+1, ..., p2 are selected.
+
+
+
+Manual for 'print'
+
+Usage: > print  [ screen / append / file ]  [ (filename) ]  (message)
+
+Writes the given strings on screen or in a file. If several strings are given, separated by spaces, they are printed one by one. (This is different to value, which removes all white spaces.) Any leading spaces are ignored, however. To include a value of a variable or an expression in the print output, wrap the variable name in dollar signs ($), e.g., $pi$, $1+1$. For more details, see the manual for 'value'.
+    (message) - By default, the given strings are printed on screen. This is invoked if the first argument given is neither screen, append nor file.
+    screen (message) - Writes the message on screen. Usually, the option screen is redundant, but if you want to start the message with, say, append you need to include screen first - otherwise it will be interpreted as a command for printing to a file.
+    append (filename) (message) - Appends the given message to a file of the given name.
+    file (filename) (message) - Writes the given message to a new file of the given name. Note that if a file exist by that name, it will be overwritten!
+
+
+
+Manual for 'recolor'
+
+Usage: > recolor  [ element / particle / bg / pick / unpick ]  [ (element) / (index) ]  (red)  (green)  (blue)  [ (alpha) ]
+
+Changes the color of atoms. The new color should be given in RGBA format, as 4 integers between 0 and 255. If one omits the alpha parameter, a value of 255 is given (opaque).
+Options:
+    (red) (green) (blue) [(alpha)] - By default, the color of the currently selected atoms are set to the given value.
+    element (element) (red) (green) (blue) [(alpha)] - Changes the color of a certain element. This setting will be saved, so that any new atoms of that particular type will have this radius.
+    particle (index) (red) (green) (blue) [(alpha)] - Changes the color of a given particle.
+    bg (red) (green) (blue) [(alpha)] - Changes the color of the background.
+    pick (red) (green) (blue) [(alpha)] - Changes the color of the outline of selected particles.
+    unpick (red) (green) (blue) [(alpha)] - Changes the color of the outline of deselected particles.
+
+
+
+Manual for 'reindex'
+
+Usage: > reindex  (index)
+
+Reorders the indices of particles according to another master structure, whose index must be given. The routine searches for similar particles close to each other in the two structures. If it finds that a particle from one structure is at a distance less than a certain match radius to a similar particle in the other structure, but they have different indices, the particle in the currently active frame will be allocated the index of the particle in the master frame. This is repeated with an expanding matching radius for the remaining particles until all have received a new index.
+
+
+
+Manual for 'resize'
+
+Usage: > resize  [ element / particle / shrink / grow ]  [ (0-2 parameters) ]
+
+Changes the radii of atoms used for visualization.
+Options:
+    (radius) - By default, the radii of the currently selected atoms are set to the given value.
+    element (element) (radius) - Changes the radius of a certain element. This setting will be saved, so that any new atoms of that particular type will have this radius.
+    particle (index) (radius) - Changes the radius of a given particle.
+    shrink - Makes all atoms a bit smaller.
+    grow - Makes all atoms a bit bigger.
+
+
+
+Manual for 'rotate'
+
+Usage: > rotate  x / y / z / axis  [(ax) (ay) (az)]  (angle)
+
+Rotates selected clusters around their centers. Atomic particles are not affected since they have no internal structure. If you wish to rotate the entire system, you should first join all particles in one cluster.
+Options:
+    x (angle) - Rotation around the x-axis by the given angle.
+    y (angle) - Rotation around the y-axis by the given angle.
+    z (angle) - Rotation around the z-axis by the given angle.
+    axis (ax) (ay) (az) (angle) - Rotation around the vector [ax, ay, az] by the given angle.
+
+
+
+Manual for 'scale'
+
+Usage: > scale  [ cell / x / y / z / particles ]  (factor)
+
+Scaling operation. By default, the entire cell is scaled with respect to the origin by the given scaling factor. This includes scaling the supercell vectors, shifting particles, and scaling clusters. However, only active particles are affected.
+Options;
+    cell (factor) - Scales the supercell and shifts the particles accordingly, but does not scale the size of clusters. If the given factor is a vector, its components are used for scaling in the directions of the corresponding supercell vectors.
+    x (factor) - Scales the supercell and shifts particles only in the direction of the first supercell vector.
+    y (factor) - Scales the supercell and shifts particles only in the direction of the second supercell vector.
+    z (factor) - Scales the supercell and shifts particles only in the direction of the third supercell vector.
+    particles (factor) - Only the sizes of clusters are scaled, no particles are shifted.
+
+
+
+Manual for 'shift'
+
+Usage: > shift  (x)  (y)  (z)
+
+Shifts selected particles by a given vector. If the system is periodic, periodic boundary conditions are automatically applied on atomic particles. Periodicity is not employed on single atoms within clusters, but on the entire cluster (as determined by the center of the cluster).
+
+
+
+Manual for 'show'
+
+Usage: > show  [ axis / cell / frame / directory ]
+
+Displays additional information. By default, the currently active particles are made visible (if some were hidden).
+Options:
+    axis - The basis vectors of the Cartesian coordinate system are drawn in the visualization window as red (x), green (y) and blue (z) lines, meeting in the origin.
+    cell - The basis vectors of the supercell are drawn in the visualization window as red (x), green (y) and blue (z) lines, meeting in the origin of the Cartesian coordinate system.
+    frame - The number of current frame and total number of frames is displayed in the visualization window.
+    directory - The current working directory is displayed in the prompt.
+
+
+
+Manual for 'uncluster'
+
+Usage: > uncluster
+
+Breaks all selected clusters to their constituent particles. Only one level of clusterization is removed, so a cluster containing smaller clusters is broken into these smaller clusters instead of atomic particles.
+
+
+
+Manual for 'undo'
+
+Usage: > undo
+
+Undos the previous operations. Note that the undo command only considers structural changes, not, e.g., changes in the graphical representation. The undo buffer exists only for the current frame and it is cleared every time a different frame is accessed.
+
+
+
+Manual for 'unpick'
+
+Usage: > unpick  [ union / replace / intersect ]  all / xmore / xless / ymore / yless / zmore / zless / range / element / particle / particles / sphere  [ (0-6 parameters) ]
+
+Deselects a group of particles to be excluded from further operations.
+Options:
+    union - A union of the currently selected particles and those specified by the command will become active.
+    replace - The currently selected particles will become inactive, then the particles specified by the command will become active.
+    intersect - An intersection of the currently selected particles and those specified by the command will become active. (default)
+    default - Turns the default pick mode off. That is, new particles are by default deselected when introduced.
+        all - Deselect all particles.
+        xmore (x) - The particles whose x coordinate is greater than the given real are deselected.
+        xless (x) - The particles whose x coordinate is less than the given real are deselected.
+        ymore (y) - The particles whose y coordinate is greater than the given real are deselected.
+        yless (y) - The particles whose y coordinate is less than the given real are deselected.
+        zmore (z) - The particles whose z coordinate is greater than the given real are deselected.
+        zless (z) - The particles whose z coordinate is less than the given real are deselected.
+        range (vx) (vy) (vz) (ux) (uy) (uz) - The vector u defines a point in space and the vector v a normal vector for a plane. Placing this plane at the given point, the particles located on that side of the plane to where the vector points are deselected.
+        sphere (ux) (uy) (uz) (r) - The vector u defines a point in space and r a radius so that the particles within this radius are deselected. If r is a vector, the norm of the vector is used as the radius.
+        element (e1) [(e2)] - If only one integer argument is given, all atomic particles of that element type are deselected. If two integers are given, all elements in the range e1, e1+1, ..., e2 are deselected.
+        particle (p1) [(p2) [(p3) ... ]] - The particles whose indices are given are deselected.
+        particles (p1) (p2) - The particles in the index range p1, p1+1, ..., p2 are deselected.
+
+
+
+Manual for 'value'
+
+Usage: > value  (expression)
+
+Evaluates an expression. The expression can contain real numbers, variables, operators and custom functions. Normal operators such as '+', '-', '*', and '/' work, as well as a set of common functions such as 'sin', 'ln', and 'exp'. Note that functions are defined using a colon (:), as in 'sin:(2*pi)' or exp:-1. For a multi-valued function, the arguments must be wrapped in curly brackets, as in 'col:{mat,1}' Comparison and logic operators such as '=', '<', '>', '&' (and), and '|' (or) are also available. A true statement is given a value of 1, an untrue one 0. Furthermore, one may define matrices and vectors using square brackets, e.g., '[[1,0][0,2]]'. When operating on matrices, most functions operate on the individual matrix elements, for instance 'exp' just takes the exponential of the matrix elements, not the matrix exponential. Multiplication and power operators ('*' and '^') invoke true matrix multiplication if possible, but if dimensions are incompatible (say, you multiply a matrix and a scalar), they also try to do element-wise operations if possible.
+ The command also allows evaluation of strings, similarly to the command print. In addition, one may wish to include evaluation within command arguments, for instance when scripting. This can be done by encasing a variable or an expression between two dollar signs ($), in which case the string within the signs is evaluated. By default, a double precision value is extracted, but whether a real or an integer value is printed may be requested by adding an 'R' or 'I' immediately after the first $ symbol. (If your expression begins with a variable with a name starting with I or R, always include the format specifier!). For a matrix valued variable, normal evaluation prints the values of all the cells in a one-line format, where the rows and columns are separated by square brackets. When evaluation is invoked by $'s, the integer valued printout just prints the dimensions of the matrix, while the real valued printout prints the values of all the cells in a multi-line format, with no brackets. 
+Example: > value 2.0+cos:pi. 
+         > value pi = $Rpi$, approximately $Ipi$
+
+
+
+Manual for 'view'
+
+Usage: > view  reset / zoom / angle / point / perspective / isometric / lenticular  [ (0-3 parameters) ]
+
+Changes the viewpoint. Note that you can also manipulate the view by dragging with the mouse (rotate) and pressing the arrow keys (left/right: rotate, up/down: zoom) while the visualization window has focus. The parameters defining the current viewpoint are always stored in predefined variables such as viewx, viewy, viewz, viewzoom, etc. For a list, enter the command 'list value'.
+Options:
+    reset - Resets the viewpoint to a default: The viewpoint is moved above (in the z-direction of) the center of the system with the 'up' direction of the view set in the y-direction. The distance from the center of the system is determined according to the total number of particles.
+    zoom (zoom) - Sets the zoom level to the given value. A larger value means a closer zoom.
+    angle (phi) (theta) [(distance)] - Defines a new viewpoint in spherical coordinates. Phi is the angle in the xy-plane with respect to the x-axis. Theta is the angle with respect to the z-axis.
+    point (x) (y) (z) - Defines a new viewpoint in Cartesian coordinates.
+    perspective - A perspetive projection is applied.
+    isometric - An isometric projection is applied.
+    lenticular - A lenticular projection is applied.
+
+
+
+Manual for 'wait'
+
+Usage: > wait  (milliseconds)
+
+Stops the execution of the program for the given time. This can be used for animating scripts.
+
+
+
+Manual for 'write'
+
+Usage: > write  [ all ]  poscar / poscar4 / xyz / png  (filename)  [ (type1) (type2) ... ]
+
+Writes data to a file. This may mean writing the coordinates of the geometry in a text file or rendering an image of the current view. For data files, the poscar and xyz formats are currently implemented. Note that when the names of elements are written, if the name of the element contains the character '_', it and anything following will be ignored when writing (e.g., 'Mg', 'Mg_2', and 'Mg_frozen' are all written as 'Mg'). This is done to allow the user to define groups of atoms which correspond to the same element but are handled separately in ASH. If you want the names of the groups to be different in the output as well, use some other delimiter (e.g., Mg2 or Mg.2). 
+Options:
+    all - Writes the geometries of all frames in either one file, one after another (xyz), or each in its own file (poscar). By default only the geometry of the current frame is written.
+    poscar (filename) [(type1) (type2) ...] - Writes the geometry in POSCAR format used by VASP 5. By default, elements are listed in order of atomic numbers. By giving a list of element symbols, e.g., Mg O Si, the user can force the order of the elements in the written file.
+    poscar4 (filename) [(type1) (type2) ...] - Writes the geometry in POSCAR format used by VASP 4. By default, elements are listed in order of atomic numbers. By giving a list of element symbols, e.g., Mg O Si, the user can force the order of the elements in the written file.
+    xyz (filename) - Writes the geometry in xyz format.
+    png (filename) - Writes the geometry in png format as an image.
+
+

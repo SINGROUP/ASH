@@ -1,0 +1,17 @@
+frame new
+define a 3.0
+create a/2 a/2 a/2 atomi
+cell [[a,0,0][0,a,0][0,0,a]]
+expand 15
+pick range 1 1 1 cellx*4/5+celly*4/5+cellz*4/5
+pick union range 1 1 -1 cellx*4/5+celly*4/5+cellz*1/5
+pick union range 1 -1 1 cellx*4/5+celly*1/5+cellz*4/5
+pick union range -1 1 1 cellx*1/5+celly*4/5+cellz*4/5
+pick union range 1 -1 -1 cellx*4/5+celly*1/5+cellz*1/5
+pick union range -1 1 -1 cellx*1/5+celly*4/5+cellz*1/5
+pick union range -1 -1 1 cellx*1/5+celly*1/5+cellz*4/5
+pick union range -1 -1 -1 cellx*1/5+celly*1/5+cellz*1/5
+delete
+pick all
+view angle pi/4 pi/4 200
+recolor element 120 100 0 150 150

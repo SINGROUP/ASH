@@ -1,0 +1,20 @@
+define aa 0
+while aa < 6
+ define aa aa+1
+ if aa<3
+  define bb aa
+ else
+  define bb 2*aa
+ endif
+ value sqrt:bb
+endwhile
+define ii 0
+while ii<3
+ define jj 0
+ define ii ii+1
+ while jj<3
+  define jj jj+1
+  value 10*ii+jj
+ endwhile 
+endwhile
+
